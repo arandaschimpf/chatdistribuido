@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-import {auth} from './fire'
+import {auth, authenticate} from './fire'
 
 const store = new Vuex.Store({
   state: {
@@ -11,7 +11,12 @@ const store = new Vuex.Store({
   },
   mutations: {
     setUser (state, user) {
-      state.user = user
+      state.user = user ? {
+        name: user.displayName,
+        email: user.email,
+        id: user.uid,
+        photo: user.photoURL
+      } : undefined
     }
   },
   actions: {
@@ -19,6 +24,12 @@ const store = new Vuex.Store({
       auth.onAuthStateChanged(user => {
         commit('setUser', user)
       })
+    },
+    async login () {
+      await authenticate()
+    },
+    async logout () {
+      await auth.signOut()
     }
   }
 })

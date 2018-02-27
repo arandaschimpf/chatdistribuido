@@ -16,9 +16,14 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-layout-header>
-    <Sidebar :open="leftDrawerOpen"/>
+    <Sidebar v-model="leftDrawerOpen"/>
     <q-page-container style="margin: 10px 5px;">
-      <router-view />
+      <router-view v-if="user"/>
+      <div class="flex flex-center" v-else>
+        <q-btn @click="login">
+          LOGIN
+        </q-btn>
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -31,6 +36,14 @@ export default {
   data () {
     return {
       leftDrawerOpen: this.$q.platform.desktop
+    }
+  },
+  computed: {
+    user () { return this.$store.state.user }
+  },
+  methods: {
+    login () {
+      this.$store.dispatch('login')
     }
   }
 }
