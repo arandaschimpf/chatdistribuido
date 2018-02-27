@@ -7,7 +7,9 @@
             :avatar="message.photo"
             :text="message.texto"
             :stamp="message.stamp"
-            :sent="message.sent"/>
+            :title="message.name"
+            :sent="message.sent"
+            @click.native="seeSender(message)"/>
     </div>
     <SendMessage @message="sendMessage"/>
   </q-page>
@@ -41,10 +43,11 @@ export default {
       const users = this.$store.state.users
       return Object.keys(messages).map(k => {
         const msg = messages[k]
-
+        const user = users[msg.uid]
         return {
           key: k,
-          photo: users[msg.uid].photo,
+          photo: user.photo,
+          name: user.name,
           texto: [msg.message],
           stamp: date.formatDate(msg.datetime, 'DD/MM/YYYY HH:mm'),
           sent: this.user.id === msg.uid
@@ -63,6 +66,13 @@ export default {
     },
     sendMessage (message) {
       this.$store.dispatch('sendMessage', message)
+    },
+    seeSender (msg) {
+      this.$q.notify({
+        message: msg.name,
+        timeout: 1000,
+        type: 'info'
+      })
     }
   }
 }

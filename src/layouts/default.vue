@@ -6,7 +6,6 @@
           flat
           dense
           round
-          class="mobile-only"
           @click="leftDrawerOpen = !leftDrawerOpen">
           <q-icon name="menu" />
         </q-btn>
