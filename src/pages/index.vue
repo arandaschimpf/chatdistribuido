@@ -2,14 +2,14 @@
   <q-page class="column justify-between">
     <div class="messages" style="overflow: auto;">
           <q-chat-message
-            v-for="i in 30"
-            :key="i"
-            avatar="https://freeiconshop.com/wp-content/uploads/edd/person-flat.png"
-            :text="['Mensaje']"
-            stamp="4 minutes ago"
-            :sent="(i%3) === 0"/>
+            v-for="message in messages"
+            :key="message.key"
+            :avatar="message.photo"
+            :text="message.texto"
+            :stamp="message.stamp"
+            :sent="message.sent"/>
     </div>
-    <SendMessage />
+    <SendMessage @message="sendMessage"/>
   </q-page>
 </template>
 
@@ -20,9 +20,50 @@
 </style>
 
 <script>
+import { date } from 'quasar'
 import SendMessage from '../components/SendMessage.vue'
+
 export default {
   name: 'PageIndex',
-  components: {SendMessage}
+  components: {SendMessage},
+  mounted () {
+    this.setup()
+  },
+  computed: {
+    chatID () {
+      return this.$route.params.id || 'general'
+    },
+    user () {
+      return this.$store.state.user
+    },
+    messages () {
+      const messages = this.$store.state.messages
+      const users = this.$store.state.users
+      return Object.keys(messages).map(k => {
+        const msg = messages[k]
+
+        return {
+          key: k,
+          photo: users[msg.uid].photo,
+          texto: [msg.message],
+          stamp: date.formatDate(msg.datetime, 'DD/MM/YYYY HH:mm'),
+          sent: this.user.id === msg.uid
+        }
+      })
+    }
+  },
+  watch: {
+    $route () {
+      this.setup()
+    }
+  },
+  methods: {
+    async setup () {
+      window.scrollTo(0, document.body.scrollHeight)
+    },
+    sendMessage (message) {
+      this.$store.dispatch('sendMessage', message)
+    }
+  }
 }
 </script>

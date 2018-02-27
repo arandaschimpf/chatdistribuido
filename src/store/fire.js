@@ -12,9 +12,9 @@ const app = firebase.initializeApp({
 const provider = new firebase.auth.GoogleAuthProvider()
 
 export const auth = app.auth()
+export const db = app.database()
 
 export async function authenticate () {
   const result = await auth.signInWithPopup(provider)
-  console.log(result)
   return result.user
 }

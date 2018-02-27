@@ -1,7 +1,7 @@
 
 export default [
   {
-    path: '/',
+    path: '/:id?',
     component: () => import('layouts/default'),
     children: [
       { path: '', component: () => import('pages/index') }

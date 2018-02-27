@@ -1,7 +1,7 @@
 <template>
   <div class="send-message">
-    <q-input v-model="message"/>
-    <q-btn color="primary">
+    <q-input v-model="message" @keyup.enter="send"/>
+    <q-btn color="primary" @click="send">
       <q-icon name="send" />
     </q-btn>
   </div>
@@ -29,6 +29,12 @@
 export default {
   data: () => ({
     message: ''
-  })
+  }),
+  methods: {
+    send () {
+      this.$emit('message', this.message)
+      this.message = ''
+    }
+  }
 }
 </script>
